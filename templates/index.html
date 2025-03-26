@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="row">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Special title treatment</h5>
+            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+
+          </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <form method="post">
+            {% for id in range(4) %}
+            <div class="row m-1">
+              <div class="col-sm-4 m-1">
+                  <input type="text" name="player{{id}}" class="form-control" placeholder="Enter Player's Name"/>
+              </div>
+            </div>
+            {% endfor %}
+            <div class="row m-1">
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
