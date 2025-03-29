@@ -58,13 +58,7 @@ class Player:
         return cls(id=cls_data['id'], name=cls_data['name'], points=cls_data['points'])
 
 
-game = {
-    'winner': None,
-    'current_card': random.choice(data[1:]),
-}
-
-
-def select_next_player():
+def select_next_player(game):
     current_player_index = game.get('current_player_index', 0)
     players = game.get('players', [])
 
@@ -73,18 +67,18 @@ def select_next_player():
     game['current_player_index'] = current_player_index
 
 
-def select_next_card():
+def select_next_card(game):
     game['current_card'] = random.choice(data[1:])
 
 
-def check_winner():
+def check_winner(game):
     players = game.get('players', [])
     for player in players:
         if player['points'] >= WINNING_POINTS:
             game['winner'] = player
 
 
-def update_game_state():
+def update_game_state(game):
     current_card = game.get('current_card', {})
     current_player_index = game.get('current_player_index', 0)
     players = game.get('players', [])
@@ -98,7 +92,7 @@ def update_game_state():
     game['players'][current_player_index] = current_player_dict
 
 
-def initialize_game_state(players):
+def initialize_game_state(game, players):
     players = [Player(i, player) for i, player in enumerate(players) if player]
     game['players'] = [player.to_dict() for player in players]
 
@@ -107,13 +101,13 @@ def initialize_game_state(players):
     game['current_player_index'] = current_player_index
 
 
-def play_round():
-    select_next_card()
-    update_game_state()
-    check_winner()
+def play_round(game):
+    select_next_card(game)
+    update_game_state(game)
+    check_winner(game)
 
     if not game['winner']:
-        select_next_player()
+        select_next_player(game)
 
     session['game'] = game
 
@@ -121,10 +115,14 @@ def play_round():
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
+        session['game'] = {
+            'winner': None,
+            'current_card': random.choice(data[1:]),
+        }
+        game = session['game']
         all_players = [request.form.get('player0'), request.form.get('player1'), request.form.get('player2'), request.form.get('player3')]
-        initialize_game_state(all_players)
-        session['game'] = game
-
+        initialize_game_state(game, all_players)
+        
         return redirect(url_for('play_game'))
 
     return render_template('index.html')
@@ -141,14 +139,14 @@ def game_over():
 
 @app.route('/play_game', methods=['GET', 'POST'])
 def play_game():
-    json_game = session.get('game', None)
+    game = session.get('game', None)
 
     if request.method == 'POST':
         if session['game']['winner']:
             return redirect(url_for('game_over'))
         
-        play_round()
-    return render_template('play_game.html', game=json_game)
+        play_round(game)
+    return render_template('play_game.html', game=game)
 
 
 if __name__ == '__main__':
