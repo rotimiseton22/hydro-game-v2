@@ -2,10 +2,13 @@
 from flask import Flask, render_template, request, url_for, session, redirect, jsonify
 import json
 import random
-from typing import List
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = 'secret key...dont tell anyone'
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
 with open('data.json', 'r') as file:
     data = json.load(file)
