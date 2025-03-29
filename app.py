@@ -84,6 +84,15 @@ def check_winner():
             game['winner'] = player
 
 
+def reset_game():
+    game = {
+        'winner': None,
+        'current_card': random.choice(data[1:]),
+    }
+
+    session['game'] = game
+
+
 def update_game_state():
     current_card = game.get('current_card', {})
     current_player_index = game.get('current_player_index', 0)
@@ -129,15 +138,25 @@ def index():
 
     return render_template('index.html')
 
+@app.route('/game_over', methods=['GET', 'POST'])
+def game_over():
+    winner = session['game']['winner']
+    if request.method == 'POST':
+        reset_game()
+        return redirect(url_for('index'))
+    
+    return render_template('game_over.html', winner=winner)
+
 
 @app.route('/play_game', methods=['GET', 'POST'])
 def play_game():
     json_game = session.get('game', None)
 
     if request.method == 'POST':
+        if session['game']['winner']:
+            return redirect(url_for('game_over'))
+        
         play_round()
-        session['game'] = game
-
     return render_template('play_game.html', game=json_game)
 
 
