@@ -84,15 +84,6 @@ def check_winner():
             game['winner'] = player
 
 
-def reset_game():
-    game = {
-        'winner': None,
-        'current_card': random.choice(data[1:]),
-    }
-
-    session['game'] = game
-
-
 def update_game_state():
     current_card = game.get('current_card', {})
     current_player_index = game.get('current_player_index', 0)
@@ -142,7 +133,7 @@ def index():
 def game_over():
     winner = session['game']['winner']
     if request.method == 'POST':
-        reset_game()
+        session.clear()
         return redirect(url_for('index'))
     
     return render_template('game_over.html', winner=winner)
