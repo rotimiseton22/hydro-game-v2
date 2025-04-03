@@ -1,29 +1,29 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div class="row">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+<div class="row">
+    <div class="card">
+        <div class="card-body">
+            <h1 class="card-title">Tiwatope's GT Project</h1>
+            <p class="card-text">Welcome to Hydro Game by Tiwa Seton. Enter Player names and start the Game.</p>
 
-          </div>
         </div>
     </div>
+</div>
 
-    <div class="row">
-        <form method="post">
-            {% for id in range(4) %}
-            <div class="row m-1">
-              <div class="col-sm-4 m-1">
-                  <input type="text" name="player{{id}}" class="form-control" placeholder="Enter Player's Name"/>
-              </div>
+<div class="row">
+    <form method="post">
+        {% for id in range(4) %}
+        <div class="row m-1">
+            <div class="col-sm-4 m-1">
+                <input type="text" name="player{{id}}" class="form-control" placeholder="Enter Player's Name" />
             </div>
-            {% endfor %}
-            <div class="row m-1">
-                <div class="col-auto">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
+        </div>
+        {% endfor %}
+        <div class="row m-1">
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">Submit</button>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
+</div>
 {% endblock %}
